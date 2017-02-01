@@ -1,0 +1,38 @@
+body {
+  background: antiquewhite;
+}
+ul {
+  width: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+li {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  list-style: none;
+  margin-left: 10px;
+  display: inline-block;
+}
+.front, .back {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  backface-visibility: hidden;
+  transition: transform 1s;
+  transform-style: preserve-3d;
+}
+.front {
+  background: lightgreen;
+}
+.back {
+  background: aquamarine;
+  transform:rotateY(180deg);
+}
+li.flipped .front {
+  transform:rotateY(180deg);
+}
+li.flipped .back {
+   transform:rotateY(0deg);
+}
