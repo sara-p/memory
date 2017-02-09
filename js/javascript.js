@@ -14,38 +14,50 @@
 
 window.onload = init;
 
-var colours = ['red', 'green', 'blue', 'black', 'pink', 'red', 'green', 'blue', 'black', 'pink', ];
+var cards = [];
+var colours = ['red', 'green', 'blue', 'black', 'pink', 'red', 'green', 'blue', 'black', 'pink'	 ];
+var gameSize = 10;
+var selectedCards = 0;
+
 
 function init() {
 
-	// how many cards
-	var gameSize = 10;
-	
+
 	// create cards
-	for (var i = 0; i < gameSize; i++) {		
+	for (var i = 0; i < gameSize; i++) {	
+		cards.push(i);
+		// create card element
 		var li = document.createElement('li');
+		li.setAttribute('id', 'id' + i);
 		li.classList.add('cards');
-		li.innerHTML = '<div class="front">front</div><div class="back">'+ colours[i] + '</div>';
-		var board = document.getElementById('board');
+		li.innerHTML = '<div class="front" onclick="selectCard(' + cards[i] + ')"></div><div class="back"></div>';
+	
 		// add cards on board
+		var board = document.getElementById('board');
 		board.appendChild(li); 
 		
-		li.addEventListener('click', flip);
+		
+
 	}
 
-	//event Listener for cards
-	// var cards = document.getElementsByClassName('cards');
-	// for (var i = 0; i < cards.length; i++) {
-	//   cards[i].addEventListener('click', flip);
-	// }
 }
 
 
-function flip() {
-  if (this.classList.contains('flipped')) {
-    this.classList.remove('flipped');
-  }
-  else {
-    this.classList.add('flipped');     
-  }
+
+function selectCard(clickedCard) {
+	
+	if (selectedCards < 2 ) {
+
+		selected = document.getElementById('id' + clickedCard);
+		selected.getElementsByClassName('back')[0].style.backgroundColor = colours[clickedCard];
+
+		if (selectedCards === 1) {
+
+		}
+
+		selectedCards+=1;
+
+	  selected.classList.add('flipped');   
+	} 
+	
 }
