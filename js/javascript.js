@@ -73,9 +73,12 @@ function compareCards(flippedCard) {
 		if (selectedCards == 2) {
 			// match
 			if(match[0].colour == match[1].colour) {
-				gameSize = gameSize - 2;
-				console.log('machar');
 				match = [];
+				selectedCards = 0;
+				gameSize = gameSize - 2;
+				if(gameSize == 0) {
+					setTimeout(gameFinish, 500);
+				}
 			}
 			// no match
 			else {
@@ -83,7 +86,6 @@ function compareCards(flippedCard) {
 				setTimeout(unFlip, 1000);
 			}
 			// reset selected card
-			selectedCards = 0;
 		}
 
 }
@@ -93,5 +95,10 @@ function unFlip() {
 		match[0].element.classList.remove('flipped');
 		match[1].element.classList.remove('flipped');
 		// delete saved cards
+		selectedCards = 0;
 		match = [];
+}
+
+function gameFinish() {
+	alert("You won!");
 }
