@@ -13,7 +13,7 @@
 //   - shuffle cards
 var cards = [];
 var card = {};
-var colours = ['red', 'green', 'blue', 'black', 'pink', 'red', 'green', 'blue', 'black', 'pink'	 ];
+var colours = ['red', 'red', 'blue', 'blue', 'pink', 'pink', 'green', 'green', 'black', 'black'	 ];
 var gameSize = 10;
 var selectedCards = 0;
 var match = [];
@@ -56,7 +56,6 @@ function selectCard(clickedCard) {
 	  selectedCard.element.classList.add('flipped');   
 	  selectedCard.element.getElementsByClassName('back')[0].style.backgroundColor = colours[clickedCard];
 	  
-	  // don't use.. remove
 	  selectedCard.flipped = 1;
 		
 		selectedCards++;
@@ -82,23 +81,35 @@ function compareCards(flippedCard) {
 			}
 			// no match
 			else {
-				console.log('machar ej');
 				setTimeout(unFlip, 1000);
 			}
-			// reset selected card
 		}
 
 }
 
 function unFlip() {
-		// flip back cards
+
+		// delete saved cards
 		match[0].element.classList.remove('flipped');
 		match[1].element.classList.remove('flipped');
-		// delete saved cards
+		
 		selectedCards = 0;
 		match = [];
 }
 
 function gameFinish() {
-	alert("You won!");
+	if(confirm("Play again?")) {
+		newGame();
+	}
+	else {
+		alert("Bye");
+	}
+}
+
+function newGame() {
+	gameSize = 4;
+
+	for(var i = 0; i < cards.length; i++) {
+		cards[i].element.classList.remove('flipped');
+	}
 }
