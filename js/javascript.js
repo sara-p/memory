@@ -13,16 +13,23 @@
 //   - shuffle cards
 var cards = [];
 var card = {};
-var colours = ['red', 'red', 'blue', 'blue', 'pink', 'pink', 'green', 'green', 'black', 'black'	 ];
-var gameSize = 10;
+var coloursInput = ['red', 'blue', 'pink', 'green', 'black', 'yellow', 'lime', 'lightblue', 'white', 'purple'];
+var colours;
+var gameSize;
 var selectedCards = 0;
 var match = [];
 
-window.onload = init;
+
+//window.onload = init;
+
+document.getElementById('gameLevel').addEventListener('click', gameLevel );
+
+
+// gameLevel();
 
 function init() {
 
-	for (var i = 0; i < gameSize; i++) {	
+	for (var i = 0; i < gameSize; i++) {
 		// create card element
 		var li = document.createElement('li');
 		li.setAttribute('id', 'id' + i);
@@ -42,7 +49,53 @@ function init() {
 		var board = document.getElementById('board');
 		board.appendChild(li); 
 	}
+	console.log(colours);
 
+}
+
+function gameLevel(e) {
+	
+	var choosenLevel = e.target.id;
+
+		var level = '';
+	switch (choosenLevel) {
+		case 'easy':
+			coloursInput.length = 4;
+			level = 'easy';
+			break;
+		case 'medium':
+			coloursInput.length = 6;
+			level = 'medium';
+			break;
+		case 'difficult':
+			coloursInput.length = 10;
+			level = 'difficult';
+			break;
+		default:
+			console.log('choose');
+	}
+	document.querySelector('h1').innerHTML = level;
+	document.getElementById('gameLevel').style.display = 'none';
+
+	colours = coloursInput.concat(coloursInput);
+  gameSize = colours.length;
+
+	shuffle(colours);	
+	// console.log(colours);
+
+}
+
+function shuffle(a) {
+  var j, x, i;
+  for (i = a.length; i; i--) {
+      j = Math.floor(Math.random() * i);
+      x = a[i - 1];
+      a[i - 1] = a[j];
+      a[j] = x;
+  }
+  console.log(colours);
+  console.log(gameSize);
+  init();
 }
 
 
@@ -50,7 +103,6 @@ function init() {
 function selectCard(clickedCard) {
 
 	if (selectedCards <= 1 ) {
-
 	  var selectedCard = cards[clickedCard]; 
 	  // add class to flip card
 	  selectedCard.element.classList.add('flipped');   
@@ -97,19 +149,30 @@ function unFlip() {
 		match = [];
 }
 
-function gameFinish() {
-	if(confirm("Play again?")) {
-		newGame();
-	}
-	else {
-		alert("Bye");
-	}
+function gameFinish(e) {
+	var playAgain = document.getElementById('playAgain');
+	playAgain.style.display = 'block';
+	playAgain.addEventListener('click', function(e){
+		
+		var playAgainChoise = e.target.id;
+		if(playAgainChoise == 'yes') {
+			newGame();
+		}
+		else {
+			alert('ok bye');
+		}
+		playAgain.style.display = 'none'
+	});
 }
 
 function newGame() {
-	gameSize = 4;
+	colours = '';
 
-	for(var i = 0; i < cards.length; i++) {
-		cards[i].element.classList.remove('flipped');
-	}
+	document.getElementById('board').innerHTML = '';
+	document.querySelector('h1').innerHTML = '';
+	document.getElementById('gameLevel').style.display = 'block';
+
+	// for(var i = 0; i < cards.length; i++) {
+	// 	cards[i].element.classList.remove('flipped');
+	// }
 }
