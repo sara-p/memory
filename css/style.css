@@ -8,13 +8,18 @@ ul {
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-wrap: wrap;
+}
+ul#board {
+  max-width: 500px;
+  margin: auto;
 }
 ul#board li {
   position: relative;
   width: 100px;
   height: 100px;
   list-style: none;
-  margin-left: 10px;
+  margin: 10px;
   display: inline-block;
 }
 .front, .back {

@@ -1,16 +1,7 @@
 //  Memory game
-//   - create cards
-//   - draw cards
-//   - play - select 2 cards
-//   - flip card
-//   - compare
-//   - match - points + cards stay
-//   - no mach - cards flip back
-//   - play again
-//   - finish
+// style in rows
+// time
 
-//   - press play
-//   - shuffle cards
 var cards = [];
 var card = {};
 var coloursInput = ['red', 'blue', 'pink', 'green', 'black', 'yellow', 'lime', 'lightblue', 'white', 'purple'];
@@ -18,7 +9,6 @@ var colours;
 var gameSize;
 var selectedCards = 0;
 var match = [];
-
 
 //window.onload = init;
 
@@ -49,7 +39,7 @@ function init() {
 		var board = document.getElementById('board');
 		board.appendChild(li); 
 	}
-	console.log(colours);
+	timer();
 
 }
 
@@ -72,7 +62,6 @@ function gameLevel(e) {
 			level = 'difficult';
 			break;
 		default:
-			console.log('choose');
 	}
 	document.querySelector('h1').innerHTML = level;
 	document.getElementById('gameLevel').style.display = 'none';
@@ -81,7 +70,6 @@ function gameLevel(e) {
   gameSize = colours.length;
 
 	shuffle(colours);	
-	// console.log(colours);
 
 }
 
@@ -98,6 +86,24 @@ function shuffle(a) {
   init();
 }
 
+function timer() {
+	var start = new Date().getTime();
+	console.log(start);
+
+
+}
+	var start = new Date().getTime();
+	setInterval(myTimer ,1000);
+	function myTimer() {
+	    
+	    var elapsed = new Date().getTime() - start; 
+	    s = Math.floor(elapsed/1000);
+	    m = Math.floor(elapsed/1000/60);
+	    h = Math.floor(elapsed/1000/60/60);
+	    document.getElementById('timer').innerHTML = h + ':' + m + ':' + s ;
+
+
+	}
 
 
 function selectCard(clickedCard) {
