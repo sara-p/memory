@@ -10,6 +10,7 @@ var gameSize;
 var selectedCards = 0;
 var match = [];
 var startTime; 
+var timer = 0;
 
 //window.onload = init;
 
@@ -53,8 +54,7 @@ function shuffle(a) {
     a[i - 1] = a[j];
     a[j] = x;
   }
-	  // console.log(colours);
-	  // console.log(gameSize);
+
   init();
 }
 
@@ -81,20 +81,22 @@ function init() {
 		board.appendChild(li); 
 	}
 	startTime = new Date().getTime();
-	console.log(startTime);
+	timer = setInterval(displayTime ,10);
+
+	console.log(timer + 'timer');
 }
 
 
 
-// var start = new Date().getTime();
-// setInterval(myTimer ,1000);
+
 
 function displayTime() {
 	var gameTime = new Date().getTime() - startTime;
+  dec = Math.floor(gameTime % 1000 / 10);
   s = Math.floor(gameTime/1000);
   m = Math.floor(gameTime/1000/60);
   h = Math.floor(gameTime/1000/60/60);
-  document.getElementById('time').innerHTML = 'Time: ' + h + ':' + m + ':' + s ;
+  document.getElementById('time').innerHTML = 'Time: ' + h + ':' + m + ':' + s + ':' + dec;
 }
 
 
@@ -126,7 +128,9 @@ function compareCards(flippedCard) {
 			selectedCards = 0;
 			gameSize = gameSize - 2;
 			if(gameSize === 0) {
-				displayTime();
+				clearInterval(timer);
+
+				// displayTime();
 				setTimeout(gameFinish, 500);
 			}
 		}
@@ -147,6 +151,7 @@ function unFlip() {
 }
 
 function gameFinish(e) {
+	console.log(timer + 'finish timer');
 	var playAgain = document.getElementById('playAgain');
 	playAgain.style.display = 'block';
 	playAgain.addEventListener('click', function(e){
@@ -164,7 +169,9 @@ function gameFinish(e) {
 
 function newGame() {
 	colours = '';
+	timer = 0;
 
+	document.getElementById('time').innerHTML = '';
 	document.getElementById('board').innerHTML = '';
 	document.querySelector('h1').innerHTML = '';
 	document.getElementById('gameLevel').style.display = 'block';
