@@ -9,39 +9,11 @@ var colours;
 var gameSize;
 var selectedCards = 0;
 var match = [];
+var startTime; 
 
 //window.onload = init;
 
 document.getElementById('gameLevel').addEventListener('click', gameLevel );
-
-
-// gameLevel();
-
-function init() {
-
-	for (var i = 0; i < gameSize; i++) {
-		// create card element
-		var li = document.createElement('li');
-		li.setAttribute('id', 'id' + i);
-		li.classList.add('cards');
-		li.innerHTML = '<div class="front" onclick="selectCard(' + i + ')"></div><div class="back"></div>';
-		
-		// save card object
-		var card = {
-    	colour: colours[i],
-    	flipped: 0,
-    	element: li,
-		};
-
-		cards.push(card);
-
-		// add cards on board
-		var board = document.getElementById('board');
-		board.appendChild(li); 
-	}
-	timer();
-
-}
 
 function gameLevel(e) {
 	
@@ -50,7 +22,7 @@ function gameLevel(e) {
 		var level = '';
 	switch (choosenLevel) {
 		case 'easy':
-			coloursInput.length = 4;
+			coloursInput.length = 1;
 			level = 'easy';
 			break;
 		case 'medium':
@@ -76,34 +48,54 @@ function gameLevel(e) {
 function shuffle(a) {
   var j, x, i;
   for (i = a.length; i; i--) {
-      j = Math.floor(Math.random() * i);
-      x = a[i - 1];
-      a[i - 1] = a[j];
-      a[j] = x;
+    j = Math.floor(Math.random() * i);
+    x = a[i - 1];
+    a[i - 1] = a[j];
+    a[j] = x;
   }
-  console.log(colours);
-  console.log(gameSize);
+	  // console.log(colours);
+	  // console.log(gameSize);
   init();
 }
 
-function timer() {
-	var start = new Date().getTime();
-	console.log(start);
+function init() {
 
+	for (var i = 0; i < gameSize; i++) {
+		// create card element
+		var li = document.createElement('li');
+		li.setAttribute('id', 'id' + i);
+		li.classList.add('cards');
+		li.innerHTML = '<div class="front" onclick="selectCard(' + i + ')"></div><div class="back"></div>';
+		
+		// save card object
+		var card = {
+    	colour: colours[i],
+    	flipped: 0,
+    	element: li,
+		};
 
-}
-	var start = new Date().getTime();
-	setInterval(myTimer ,1000);
-	function myTimer() {
-	    
-	    var elapsed = new Date().getTime() - start; 
-	    s = Math.floor(elapsed/1000);
-	    m = Math.floor(elapsed/1000/60);
-	    h = Math.floor(elapsed/1000/60/60);
-	    document.getElementById('timer').innerHTML = h + ':' + m + ':' + s ;
+		cards.push(card);
 
-
+		// add cards on board
+		var board = document.getElementById('board');
+		board.appendChild(li); 
 	}
+	startTime = new Date().getTime();
+	console.log(startTime);
+}
+
+
+
+// var start = new Date().getTime();
+// setInterval(myTimer ,1000);
+
+function displayTime() {
+	var gameTime = new Date().getTime() - startTime;
+  s = Math.floor(gameTime/1000);
+  m = Math.floor(gameTime/1000/60);
+  h = Math.floor(gameTime/1000/60/60);
+  document.getElementById('time').innerHTML = 'Time: ' + h + ':' + m + ':' + s ;
+}
 
 
 function selectCard(clickedCard) {
@@ -124,35 +116,34 @@ function selectCard(clickedCard) {
 }
 
 function compareCards(flippedCard) {
-		// save selected cards
-		match.push(flippedCard); 
-		// check if match when 2 cards are selected
-		if (selectedCards == 2) {
-			// match
-			if(match[0].colour == match[1].colour) {
-				match = [];
-				selectedCards = 0;
-				gameSize = gameSize - 2;
-				if(gameSize == 0) {
-					setTimeout(gameFinish, 500);
-				}
-			}
-			// no match
-			else {
-				setTimeout(unFlip, 1000);
+	// save selected cards
+	match.push(flippedCard); 
+	// check if match when 2 cards are selected
+	if (selectedCards == 2) {
+		// match
+		if(match[0].colour == match[1].colour) {
+			match = [];
+			selectedCards = 0;
+			gameSize = gameSize - 2;
+			if(gameSize === 0) {
+				displayTime();
+				setTimeout(gameFinish, 500);
 			}
 		}
-
+		// no match
+		else {
+			setTimeout(unFlip, 1000);
+		}
+	}
 }
 
 function unFlip() {
-
-		// delete saved cards
-		match[0].element.classList.remove('flipped');
-		match[1].element.classList.remove('flipped');
-		
-		selectedCards = 0;
-		match = [];
+	// delete saved cards
+	match[0].element.classList.remove('flipped');
+	match[1].element.classList.remove('flipped');
+	
+	selectedCards = 0;
+	match = [];
 }
 
 function gameFinish(e) {
@@ -167,7 +158,7 @@ function gameFinish(e) {
 		else {
 			alert('ok bye');
 		}
-		playAgain.style.display = 'none'
+		playAgain.style.display = 'none';
 	});
 }
 

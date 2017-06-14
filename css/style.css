@@ -62,3 +62,7 @@ li.flipped .back {
 #playAgain {
   display: none;
 }
+#time {
+  text-align: center;
+  font-size: 16px;
+}
