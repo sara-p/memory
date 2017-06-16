@@ -73,7 +73,6 @@ function init() {
     	flipped: 0,
     	element: li,
 		};
-
 		cards.push(card);
 
 		// add cards on board
@@ -83,7 +82,6 @@ function init() {
 	startTime = new Date().getTime();
 	timer = setInterval(displayTime ,10);
 
-	console.log(timer + 'timer');
 }
 
 
@@ -130,7 +128,6 @@ function compareCards(flippedCard) {
 			if(gameSize === 0) {
 				clearInterval(timer);
 
-				// displayTime();
 				setTimeout(gameFinish, 500);
 			}
 		}
@@ -151,12 +148,13 @@ function unFlip() {
 }
 
 function gameFinish(e) {
-	console.log(timer + 'finish timer');
 	var playAgain = document.getElementById('playAgain');
 	playAgain.style.display = 'block';
-	playAgain.addEventListener('click', function(e){
-		
-		var playAgainChoise = e.target.id;
+	playAgain.addEventListener('click', playGameAgain);
+}
+
+function playGameAgain(event) {
+	var playAgainChoise = event.target.id;
 		if(playAgainChoise == 'yes') {
 			newGame();
 		}
@@ -164,19 +162,21 @@ function gameFinish(e) {
 			alert('ok bye');
 		}
 		playAgain.style.display = 'none';
-	});
 }
 
 function newGame() {
+	for(var i = 0; i < cards.length; i++) {
+		cards[i].element.classList.remove('flipped');
+	}
+	
+  cards = [];
 	colours = '';
 	timer = 0;
+
 
 	document.getElementById('time').innerHTML = '';
 	document.getElementById('board').innerHTML = '';
 	document.querySelector('h1').innerHTML = '';
 	document.getElementById('gameLevel').style.display = 'block';
-
-	// for(var i = 0; i < cards.length; i++) {
-	// 	cards[i].element.classList.remove('flipped');
-	// }
+	
 }
