@@ -1,6 +1,4 @@
 //  Memory game
-// style in rows
-// time
 
 var cards = [];
 var card = {};
@@ -17,21 +15,22 @@ var timer = 0;
 document.getElementById('gameLevel').addEventListener('click', gameLevel );
 
 function gameLevel(e) {
-	
+	//copy into a new array
+	colours = coloursInput.slice();
 	var choosenLevel = e.target.id;
 
 		var level = '';
 	switch (choosenLevel) {
 		case 'easy':
-			coloursInput.length = 1;
+			colours.length = 1;
 			level = 'easy';
 			break;
 		case 'medium':
-			coloursInput.length = 6;
+			colours.length = 6;
 			level = 'medium';
 			break;
 		case 'difficult':
-			coloursInput.length = 10;
+			colours.length = 10;
 			level = 'difficult';
 			break;
 		default:
@@ -39,7 +38,7 @@ function gameLevel(e) {
 	document.querySelector('h1').innerHTML = level;
 	document.getElementById('gameLevel').style.display = 'none';
 
-	colours = coloursInput.concat(coloursInput);
+	colours = colours.concat(colours);
   gameSize = colours.length;
 
 	shuffle(colours);	
@@ -79,17 +78,17 @@ function init() {
 		var board = document.getElementById('board');
 		board.appendChild(li); 
 	}
+	// set time when game starts
 	startTime = new Date().getTime();
 	timer = setInterval(displayTime ,10);
 
 }
 
 
-
-
-
 function displayTime() {
+	// calculate current time
 	var gameTime = new Date().getTime() - startTime;
+	// display cureent time
   dec = Math.floor(gameTime % 1000 / 10);
   s = Math.floor(gameTime/1000);
   m = Math.floor(gameTime/1000/60);
@@ -165,13 +164,16 @@ function playGameAgain(event) {
 }
 
 function newGame() {
+	//reset game
 	for(var i = 0; i < cards.length; i++) {
 		cards[i].element.classList.remove('flipped');
 	}
 	
   cards = [];
-	colours = '';
+	colours = {};
 	timer = 0;
+	coloursInput.length = 10;
+
 
 
 	document.getElementById('time').innerHTML = '';
