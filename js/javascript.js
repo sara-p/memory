@@ -1,4 +1,8 @@
 //  Memory game
+// add name of player
+// save name 
+// save time
+// make a leaderboard
 
 var cards = [];
 var card = {};
@@ -53,7 +57,6 @@ function shuffle(a) {
     a[i - 1] = a[j];
     a[j] = x;
   }
-
   init();
 }
 
@@ -88,12 +91,30 @@ function init() {
 function displayTime() {
 	// calculate current time
 	var gameTime = new Date().getTime() - startTime;
-	// display cureent time
-  dec = Math.floor(gameTime % 1000 / 10);
-  s = Math.floor(gameTime/1000);
-  m = Math.floor(gameTime/1000/60);
-  h = Math.floor(gameTime/1000/60/60);
-  document.getElementById('time').innerHTML = 'Time: ' + h + ':' + m + ':' + s + ':' + dec;
+
+	// if more than one day, finish game
+	if (gameTime > 86399999) {
+  	document.getElementById('time').innerHTML = 'You are too slow';
+		clearInterval(timer);
+
+		setTimeout(gameFinish, 500);
+			
+	}
+	else {
+		// display cureent time
+	  dec = Math.floor(gameTime % 1000 / 10);
+	  s = Math.floor((gameTime/1000) % 60);
+	  m = Math.floor((gameTime/(1000*60)) % 60);
+	  h = Math.floor((gameTime/(1000*60*60)) % 24);
+
+	  // display time in double digits
+		if(dec < 10){dec = '0' + dec;}
+		if(h < 10){h = '0' + h;}
+		if(m < 10){m = '0' + m;}
+		if(s < 10){s = '0' + s;}
+
+	  document.getElementById('time').innerHTML = 'Time: ' + h + ':' + m + ':' + s + ':' + dec;	
+	}
 }
 
 
