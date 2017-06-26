@@ -17,8 +17,10 @@ var timer = 0;
 //window.onload = init;
 
 document.getElementById('gameLevel').addEventListener('click', gameLevel );
+document.getElementById('enterPlayer').addEventListener('click', player );
 
 function gameLevel(e) {
+
 	//copy into a new array
 	colours = coloursInput.slice();
 	var choosenLevel = e.target.id;
@@ -58,6 +60,17 @@ function shuffle(a) {
     a[j] = x;
   }
   init();
+}
+
+function player() {
+	//save the player
+	var person = prompt("Please enter your name");
+  if (person !== null) {
+    document.getElementById('player').innerHTML = "Player: " + person;
+   	document.getElementById('enterPlayer').style.display = 'none'; 
+   	document.getElementById('gameLevel').style.display = 'block'; 
+	}
+	saveResult(person);
 }
 
 function init() {
@@ -184,6 +197,93 @@ function playGameAgain(event) {
 		playAgain.style.display = 'none';
 }
 
+
+
+function saveResult(player) {
+	// sessionStorage.clear();
+	// localStorage.clear();
+	// Check browser support
+	if (typeof(Storage) !== "undefined") {
+	    // Store
+	    // sessionStorage.setItem('name', player);
+
+
+    // Parse any JSON previously stored in allNames
+    var existingEntries = JSON.parse(sessionStorage.getItem("allNames"));
+    if(existingEntries === null) {
+    	existingEntries = [];
+    } 
+    var playerName = player;
+    var entry = {
+        "name": playerName,
+    };
+    sessionStorage.setItem("entry", JSON.stringify(entry));
+    // Save allEntries back to local storage
+    existingEntries.push(entry);
+    sessionStorage.setItem("allNames", JSON.stringify(existingEntries));
+
+    var leaderBoard = JSON.parse(sessionStorage.getItem("allNames"));
+
+		console.log(leaderBoard);
+
+    for (var i = 0; i < leaderBoard.length; i++){
+    	console.log(leaderBoard[i].name);
+ 			var li = document.createElement('li');
+   		var result = document.getElementById('result');
+   		li.innerHTML = "name: " + leaderBoard[i].name;
+   		result.appendChild(li); 
+		}
+
+		// var count = 0;
+
+		// for(var prop in leaderBoard) {
+		// 	if(leaderBoard.hasOwnProperty(prop)) {
+		// 	  ++count;
+	 //   		var li = document.createElement('li');
+	 //   		var result = document.getElementById('result');
+	 //   		li.innerHTML = prop;
+	 //   		result.appendChild(li); 
+		// console.log(prop);
+		
+		// 	}
+		// }
+	
+
+
+		//localStorage.setItem('bgcolor', document.getElementById('bgcolor').value);
+	    // localStorage.removeItem('allNames');
+
+
+
+	    // localStorage.removeItem('entry');
+	    // localStorage.removeItem('name');
+	    // sessionStorage.removeItem('allNames');
+	    // sessionStorage.removeItem('entry');
+	    // sessionStorage.removeItem('name');
+			// console.log(localStorage.getItem("allNames").length);
+    		// do something with localStorage.getItem(localStorage.key(i));
+    		// console.log(localStorage.getItem(localStorage.key(i)));
+    		// console.log(sessionStorage.getItem("allNames") );
+    		// console.log(sessionStorage.getItem("entry") );
+    		// console.log(sessionStorage.getItem("name") );
+    		// console.log(localStorage.key(i) + "=[" + localStorage.getItem(localStorage.key(i)) + "]");
+    		// console.log(localStorage.length);
+   		
+
+	    // Retrieve
+	    // var localStorageShow = sessionStorage.getItem("name");
+	    // console.log(localStorageShow);
+	    
+	    // document.getElementById("result").innerHTML = sessionStorage.getItem("name");
+	} else {
+	    document.getElementById("result").innerHTML = "Sorry, your browser does not support Web Storage...";
+	}
+	
+}
+
+
+
+
 function newGame() {
 	//reset game
 	for(var i = 0; i < cards.length; i++) {
@@ -195,11 +295,11 @@ function newGame() {
 	timer = 0;
 	coloursInput.length = 10;
 
-
-
+	document.getElementById('player').innerHTML = '';
 	document.getElementById('time').innerHTML = '';
 	document.getElementById('board').innerHTML = '';
 	document.querySelector('h1').innerHTML = '';
-	document.getElementById('gameLevel').style.display = 'block';
+	document.getElementById('gameLevel').style.display = 'none';
+	document.getElementById('enterPlayer').style.display = 'block'; 
 	
 }

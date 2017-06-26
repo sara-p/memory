@@ -10,7 +10,7 @@ ul {
   justify-content: center;
   flex-wrap: wrap;
 }
-ul#board {
+ul#board,ul#result {
   max-width: 500px;
   margin: auto;
 }
@@ -48,7 +48,8 @@ li.flipped .back {
    transform:rotateY(0deg);
 }
 #playAgain li,
-#gameLevel li {
+#gameLevel li,
+#enterPlayer {
   background: #7bedf4;
   list-style: none;
   margin-left: 10px;
@@ -58,11 +59,22 @@ li.flipped .back {
   line-height: 50px;
   color: #fff; 
 }
-
-#playAgain {
+#enterPlayer {
+  margin: auto;
+}
+#playAgain,
+#gameLevel {
   display: none;
 }
-#time {
+#time, #player {
   text-align: center;
   font-size: 16px;
+}
+
+ul#result {
+  display: block;
+
+}
+ul#result li {
+   list-style: none;
 }
