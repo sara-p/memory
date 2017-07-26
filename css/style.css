@@ -63,7 +63,8 @@ li.flipped .back {
   margin: auto;
 }
 #playAgain,
-#gameLevel {
+#gameLevel,
+#player {
   display: none;
 }
 #time, #player {

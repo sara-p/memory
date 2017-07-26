@@ -13,20 +13,38 @@ var selectedCards = 0;
 var match = [];
 var startTime; 
 var timer = 0;
+var gameTime;
 
 //window.onload = init;
 
-document.getElementById('gameLevel').addEventListener('click', gameLevel );
+// listen for click on Player and Level 
 document.getElementById('enterPlayer').addEventListener('click', player );
+document.getElementById('gameLevel').addEventListener('click', gameLevel );
 
+
+//save and print the player 
+function player() {
+  var person = prompt("Please enter your name");
+  if (person !== null) {
+    document.getElementById('player').style.display = 'block';
+    document.getElementById('player').innerHTML = 'Name: ' + person;
+    document.getElementById('enterPlayer').style.display = 'none'; 
+    document.getElementById('gameLevel').style.display = 'block'; 
+  }
+}
+
+// set the game level and add colours on card
+  //copy into a new array
 function gameLevel(e) {
-
-	//copy into a new array
 	colours = coloursInput.slice();
-	var choosenLevel = e.target.id;
+	
+  // check which level is choosen
+  var choosenLevel = e.target.id;
 
-		var level = '';
-	switch (choosenLevel) {
+	var level = '';
+	
+  // set number of colour on differnt level
+  switch (choosenLevel) {
 		case 'easy':
 			colours.length = 1;
 			level = 'easy';
@@ -41,9 +59,12 @@ function gameLevel(e) {
 			break;
 		default:
 	}
+
+  // display Level headline
 	document.querySelector('h1').innerHTML = level;
 	document.getElementById('gameLevel').style.display = 'none';
 
+  // double cards
 	colours = colours.concat(colours);
   gameSize = colours.length;
 
@@ -51,6 +72,7 @@ function gameLevel(e) {
 
 }
 
+// shuffle cards 
 function shuffle(a) {
   var j, x, i;
   for (i = a.length; i; i--) {
@@ -62,19 +84,9 @@ function shuffle(a) {
   init();
 }
 
-function player() {
-	//save the player
-	var person = prompt("Please enter your name");
-  if (person !== null) {
-    document.getElementById('player').innerHTML = "Player: " + person;
-   	document.getElementById('enterPlayer').style.display = 'none'; 
-   	document.getElementById('gameLevel').style.display = 'block'; 
-	}
-	saveResult(person);
-}
 
 function init() {
-
+  // set up board
 	for (var i = 0; i < gameSize; i++) {
 		// create card element
 		var li = document.createElement('li');
@@ -103,7 +115,7 @@ function init() {
 
 function displayTime() {
 	// calculate current time
-	var gameTime = new Date().getTime() - startTime;
+	 gameTime = new Date().getTime() - startTime;
 
 	// if more than one day, finish game
 	if (gameTime > 86399999) {
@@ -132,12 +144,13 @@ function displayTime() {
 
 
 function selectCard(clickedCard) {
-
+  // check if 2 or less card are selected
 	if (selectedCards <= 1 ) {
-	  var selectedCard = cards[clickedCard]; 
+	  var selectedCard = cards[clickedCard];
 	  // add class to flip card
 	  selectedCard.element.classList.add('flipped');   
-	  selectedCard.element.getElementsByClassName('back')[0].style.backgroundColor = colours[clickedCard];
+	  //set colour on the back of the card on selected card
+    selectedCard.element.getElementsByClassName('back')[0].style.backgroundColor = colours[clickedCard];
 	  
 	  selectedCard.flipped = 1;
 		
@@ -157,10 +170,13 @@ function compareCards(flippedCard) {
 		if(match[0].colour == match[1].colour) {
 			match = [];
 			selectedCards = 0;
-			gameSize = gameSize - 2;
-			if(gameSize === 0) {
+			//how many card left to match?
+      gameSize = gameSize - 2;
+			
+      // check if there are more cards to match
+      if(gameSize === 0) {
+				saveResult();
 				clearInterval(timer);
-
 				setTimeout(gameFinish, 500);
 			}
 		}
@@ -180,6 +196,7 @@ function unFlip() {
 	match = [];
 }
 
+// show play again option
 function gameFinish(e) {
 	var playAgain = document.getElementById('playAgain');
 	playAgain.style.display = 'block';
@@ -199,86 +216,57 @@ function playGameAgain(event) {
 
 
 
-function saveResult(player) {
-	// sessionStorage.clear();
+function saveResult() {
+	// clear storage
+  // sessionStorage.clear();
 	// localStorage.clear();
+ 
 	// Check browser support
 	if (typeof(Storage) !== "undefined") {
-	    // Store
-	    // sessionStorage.setItem('name', player);
-
-
-    // Parse any JSON previously stored in allNames
+    // convert previously stored allNames to objects
     var existingEntries = JSON.parse(sessionStorage.getItem("allNames"));
     if(existingEntries === null) {
     	existingEntries = [];
     } 
-    var playerName = player;
+    var playerName = document.getElementById('player').innerHTML;
+    var playerTime = document.getElementById('time').innerHTML;
+    
     var entry = {
         "name": playerName,
+        "time": playerTime,
+        "seconds": gameTime,
     };
-    sessionStorage.setItem("entry", JSON.stringify(entry));
-    // Save allEntries back to local storage
+    // do I need this
+    // sessionStorage.setItem("entry", JSON.stringify(entry));
+    
+    //add new entry to array
     existingEntries.push(entry);
+    
+    // Save allEntries back to local storage
     sessionStorage.setItem("allNames", JSON.stringify(existingEntries));
 
-    var leaderBoard = JSON.parse(sessionStorage.getItem("allNames"));
+    // var leaderBoard = JSON.parse(sessionStorage.getItem("allNames"));
+    
+    console.log(existingEntries);
+    // sort leaderbord after best time
+    existingEntries.sort(function(a, b) {
+      return a.seconds-b.seconds;
+    });
 
-		console.log(leaderBoard);
-
-    for (var i = 0; i < leaderBoard.length; i++){
-    	console.log(leaderBoard[i].name);
+    // print top 20 leaderboard
+    for (var i = 0; (i < existingEntries.length && i < 20); i++){
+      // create list element to leaderboard
  			var li = document.createElement('li');
    		var result = document.getElementById('result');
-   		li.innerHTML = "name: " + leaderBoard[i].name;
+   		li.innerHTML = " " + existingEntries[i].name + ' '  + existingEntries[i].time ;
    		result.appendChild(li); 
 		}
 
-		// var count = 0;
-
-		// for(var prop in leaderBoard) {
-		// 	if(leaderBoard.hasOwnProperty(prop)) {
-		// 	  ++count;
-	 //   		var li = document.createElement('li');
-	 //   		var result = document.getElementById('result');
-	 //   		li.innerHTML = prop;
-	 //   		result.appendChild(li); 
-		// console.log(prop);
 		
-		// 	}
-		// }
-	
-
-
-		//localStorage.setItem('bgcolor', document.getElementById('bgcolor').value);
-	    // localStorage.removeItem('allNames');
-
-
-
-	    // localStorage.removeItem('entry');
-	    // localStorage.removeItem('name');
-	    // sessionStorage.removeItem('allNames');
-	    // sessionStorage.removeItem('entry');
-	    // sessionStorage.removeItem('name');
-			// console.log(localStorage.getItem("allNames").length);
-    		// do something with localStorage.getItem(localStorage.key(i));
-    		// console.log(localStorage.getItem(localStorage.key(i)));
-    		// console.log(sessionStorage.getItem("allNames") );
-    		// console.log(sessionStorage.getItem("entry") );
-    		// console.log(sessionStorage.getItem("name") );
-    		// console.log(localStorage.key(i) + "=[" + localStorage.getItem(localStorage.key(i)) + "]");
-    		// console.log(localStorage.length);
-   		
-
-	    // Retrieve
-	    // var localStorageShow = sessionStorage.getItem("name");
-	    // console.log(localStorageShow);
-	    
-	    // document.getElementById("result").innerHTML = sessionStorage.getItem("name");
-	} else {
-	    document.getElementById("result").innerHTML = "Sorry, your browser does not support Web Storage...";
+	} 
+  else {
+	  document.getElementById("result").innerHTML = "Sorry, your browser does not support Web Storage...";
 	}
-	
 }
 
 
@@ -295,9 +283,11 @@ function newGame() {
 	timer = 0;
 	coloursInput.length = 10;
 
+  // reset board
 	document.getElementById('player').innerHTML = '';
 	document.getElementById('time').innerHTML = '';
 	document.getElementById('board').innerHTML = '';
+	document.getElementById('result').innerHTML = '';
 	document.querySelector('h1').innerHTML = '';
 	document.getElementById('gameLevel').style.display = 'none';
 	document.getElementById('enterPlayer').style.display = 'block'; 
