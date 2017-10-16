@@ -1,7 +1,4 @@
 //  Memory game
-// add name of player
-// save name 
-// save time
 // make a leaderboard
 
 var cards = [];
@@ -15,12 +12,9 @@ var startTime;
 var timer = 0;
 var gameTime;
 
-//window.onload = init;
-
 // listen for click on Player and Level 
 document.getElementById('enterPlayer').addEventListener('click', player );
 document.getElementById('gameLevel').addEventListener('click', gameLevel );
-
 
 //save and print the player 
 function player() {
@@ -34,7 +28,7 @@ function player() {
 }
 
 // set the game level and add colours on card
-  //copy into a new array
+// copy into a new array
 function gameLevel(e) {
 	colours = coloursInput.slice();
 	
@@ -46,7 +40,7 @@ function gameLevel(e) {
   // set number of colour on differnt level
   switch (choosenLevel) {
 		case 'easy':
-			colours.length = 1;
+			colours.length = 4;
 			level = 'easy';
 			break;
 		case 'medium':
@@ -162,6 +156,7 @@ function selectCard(clickedCard) {
 }
 
 function compareCards(flippedCard) {
+
 	// save selected cards
 	match.push(flippedCard); 
 	// check if match when 2 cards are selected
@@ -218,7 +213,7 @@ function playGameAgain(event) {
 
 function saveResult() {
 	// clear storage
-  // sessionStorage.clear();
+ //  sessionStorage.clear();
 	// localStorage.clear();
  
 	// Check browser support
@@ -228,13 +223,16 @@ function saveResult() {
     if(existingEntries === null) {
     	existingEntries = [];
     } 
+    
     var playerName = document.getElementById('player').innerHTML;
     var playerTime = document.getElementById('time').innerHTML;
+    var playerlevel = document.querySelector('h1.level').innerHTML;
     
     var entry = {
-        "name": playerName,
-        "time": playerTime,
-        "seconds": gameTime,
+      "name": playerName,
+      "time": playerTime,
+      "seconds": gameTime,
+      "level": playerlevel,
     };
     // do I need this
     // sessionStorage.setItem("entry", JSON.stringify(entry));
@@ -245,32 +243,51 @@ function saveResult() {
     // Save allEntries back to local storage
     sessionStorage.setItem("allNames", JSON.stringify(existingEntries));
 
-    // var leaderBoard = JSON.parse(sessionStorage.getItem("allNames"));
     
-    console.log(existingEntries);
     // sort leaderbord after best time
     existingEntries.sort(function(a, b) {
       return a.seconds-b.seconds;
     });
 
-    // print top 20 leaderboard
-    for (var i = 0; (i < existingEntries.length && i < 20); i++){
-      // create list element to leaderboard
- 			var li = document.createElement('li');
-   		var result = document.getElementById('result');
-   		li.innerHTML = " " + existingEntries[i].name + ' '  + existingEntries[i].time ;
-   		result.appendChild(li); 
-		}
+    //print leaderboard
 
-		
+    for (var i = 0; (i < existingEntries.length ); i++){
+      // create list element to leaderboard
+      var li = document.createElement('li');
+      var result;
+   
+      //see what level and add li in correct ul
+      switch(existingEntries[i].level) {
+        case 'easy':
+        result = document.querySelector('#result ul.easy');
+        // console.log(result.getElementsByTagName('li').length);
+          // DO THIS NEXT
+        break;
+        case 'medium':
+        result = document.querySelector('#result ul.medium');
+        console.log('swich medium');
+        break;
+        case 'difficult':
+        result = document.querySelector('#result ul.difficult');
+        console.log('swich difficult');
+        break;
+      }
+      // display top 2
+      if(result.getElementsByTagName('li').length < 2) {
+         li.innerHTML = "<div class='result-name'>" + existingEntries[i].name + '</div>'  + "<div class='result-time'>" +  existingEntries[i].time + "</div>";
+         result.appendChild(li); 
+      }
+
+    }
+
+
+    document.getElementById('result').style.display = 'block';
+
 	} 
   else {
 	  document.getElementById("result").innerHTML = "Sorry, your browser does not support Web Storage...";
 	}
 }
-
-
-
 
 function newGame() {
 	//reset game
@@ -282,14 +299,17 @@ function newGame() {
 	colours = {};
 	timer = 0;
 	coloursInput.length = 10;
-
   // reset board
 	document.getElementById('player').innerHTML = '';
 	document.getElementById('time').innerHTML = '';
 	document.getElementById('board').innerHTML = '';
-	document.getElementById('result').innerHTML = '';
-	document.querySelector('h1').innerHTML = '';
-	document.getElementById('gameLevel').style.display = 'none';
+	document.getElementById('result').style.display = 'none';
+  // document.querySelectorAll('#result ul').innerHTML = ''; Doesn't work, don't know why
+  document.querySelector('.difficult').innerHTML = '';
+  document.querySelector('.medium').innerHTML = '';
+  document.querySelector('.easy').innerHTML = '';
+  document.querySelector('h1').innerHTML = '';
+  document.getElementById('gameLevel').style.display = 'none';
 	document.getElementById('enterPlayer').style.display = 'block'; 
 	
 }
